@@ -4,6 +4,7 @@ interface Movie {
     description: string,
     image?: string,
     genre: string,
+    date: string,
     id: number
   }
 

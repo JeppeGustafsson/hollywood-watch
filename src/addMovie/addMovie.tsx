@@ -8,6 +8,11 @@ const AddMovie = (props: any) => {
     const [description, setDescription] = useState<string>('');
     const [genre, setGenre] = useState<string>('');
 
+    const date = new Date();
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const seconds = date.getSeconds();
+
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         let id = props.movieData.length += 1;
@@ -16,15 +21,12 @@ const AddMovie = (props: any) => {
             image: image,
             description: description,
             genre: genre,
+            date: `${hours}:${minutes}:${seconds}`,
             id: id
         }
         props.add(item);
         props.close(false);
     }
-
-    useEffect(() => {
-        console.log(image.slice(12))
-    },[image])
 
     return (
         <div className={Style.AddMovie}>

@@ -4,6 +4,7 @@ import Item from './movieGrid/item';
 import SearchBar from './search/SearchBar';
 import AddMovie from './addMovie/addMovie';
 import { Movie } from './models/interface';
+import _ from 'lodash';
 import lotrImageOne from './assets/lotr-1.jpeg';
 import lotrImageTwo from './assets/lotr-2.jpg';
 import lotrImageThree from './assets/lotr-3.jpg';
@@ -12,12 +13,17 @@ import Logo from './assets/logo.png';
 
 function App() {
   const [addOn, setAddOn] = useState(false);
+  const date = new Date();
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const seconds = date.getSeconds();
   const movieData: Movie[] = [
     {
       title: 'Lord of the Rings: The Fellowship of the Ring',
       description: 'A meek Hobbit from the Shire and eight companions set out on a journey to destroy the powerful One Ring and save Middle-earth from the Dark Lord Sauron.',
       image: lotrImageOne,
       genre: 'fantasy',
+      date: `${hours}:${minutes}:${seconds}`,
       id: 1
     },
     {
@@ -25,6 +31,7 @@ function App() {
       description: 'While Frodo and Sam edge closer to Mordor with the help of the shifty Gollum, the divided fellowship makes a stand against Saurons new ally, Saruman, and his hordes of Isengard.',
       image: lotrImageTwo,
       genre: 'fantasy',
+      date: `${hours}:${minutes}:${seconds}`,
       id: 2
     },
     {
@@ -32,6 +39,7 @@ function App() {
       description: 'Gandalf and Aragorn lead the World of Men against Saurons army to draw his gaze from Frodo and Sam as they approach Mount Doom with the One Ring.',
       image: lotrImageThree,
       genre: 'fantasy',
+      date: `${hours}:${minutes}:${seconds}`,
       id: 3
     },
     {
@@ -39,6 +47,7 @@ function App() {
       description: 'Unscrupulous boxing promoters, violent bookmakers, a Russian gangster, incompetent amateur robbers and supposedly Jewish jewelers fight to track down a priceless stolen diamond.',
       image: snatchImage,
       genre: 'action, comedy',
+      date: `${hours}:${minutes}:${seconds}`,
       id: 4
     }
   ]
@@ -64,9 +73,16 @@ function App() {
 
   useEffect(() => {
     if (sortType === 'default / newest') {
-      
+      const defaultSorted: Movie[] = _.sortBy(secureData, 'date').reverse();
+      setSortedData(defaultSorted);
+    } else if (sortType === 'A - Z') {
+      const asendingSorted: Movie[] = _.sortBy(secureData, 'title');
+      setSortedData(asendingSorted);
+    } else {
+      const asendingReverseSorted: Movie[] = _.sortBy(secureData, 'title').reverse();
+      setSortedData(asendingReverseSorted);
     }
-  },[sortType])
+  },[data, sortType])
 
   return (
     <div className="App">
@@ -80,7 +96,7 @@ function App() {
         <section className="item-wrapper">
           {
             search.length < 1 ? 
-            secureData.map(i => {
+            sortedData.map(i => {
               return <Item
                       key={i.id}
                       title={i.title}
@@ -101,6 +117,7 @@ function App() {
           }
         </section>
       </main>
+      <footer>@HollywoodWatch</footer>
     </div>
   );
 }
