@@ -85,10 +85,10 @@ function App() {
       const defaultSorted: Movie[] = _.sortBy(secureData, 'date').reverse();
       setSortedData(defaultSorted);
     } else if (sortType === 'A - Z') {
-      const asendingSorted: Movie[] = _.sortBy(secureData, 'title');
+      const asendingSorted: Movie[] = _.sortBy(secureData, t => t.title.toLowerCase());
       setSortedData(asendingSorted);
     } else {
-      const asendingReverseSorted: Movie[] = _.sortBy(secureData, 'title').reverse();
+      const asendingReverseSorted: Movie[] = _.sortBy(secureData, t => t.title.toLowerCase()).reverse();
       setSortedData(asendingReverseSorted);
     }
   },[data, sortType]);
