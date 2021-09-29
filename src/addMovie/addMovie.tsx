@@ -7,6 +7,7 @@ const AddMovie = (props: any) => {
     const [image, setImage] = useState<string>('');
     const [description, setDescription] = useState<string>('');
     const [genre, setGenre] = useState<string>('');
+    const [error, setError] = useState<boolean>(false);
 
     const date = new Date();
     const hours = date.getHours();
@@ -24,14 +25,20 @@ const AddMovie = (props: any) => {
             date: `${hours}:${minutes}:${seconds}`,
             id: id
         }
-        props.add(item);
+        if (title.length < 1 || image.length < 1 || description.length < 1) {
+            setError(true);
+            return;
+        } else {
+            props.add(item);
+        }
         props.close(false);
     }
 
     return (
         <div className={Style.AddMovie}>
             <h1>Add movie to list</h1>
-            <form onSubmit={(e: React.FormEvent<HTMLFormElement>): void => handleSubmit(e)}>
+            { error ? <p>You need to enter information in all fields to add movie.</p> : null }
+            <form className={error ? 'error' : ''} onSubmit={(e: React.FormEvent<HTMLFormElement>): void => handleSubmit(e)}>
                 <input type="text" name="title" placeholder="Title" onChange={(e: React.ChangeEvent<HTMLInputElement>): void => setTitle(e?.target?.value)} />
                 <input type="text" name="image" placeholder="Image URL" onChange={(e: React.ChangeEvent<HTMLInputElement>): void => setImage(e?.target?.value)} />
                 <input type="text" name="description" placeholder="Description" onChange={(e: React.ChangeEvent<HTMLInputElement>): void => setDescription(e?.target?.value)} />

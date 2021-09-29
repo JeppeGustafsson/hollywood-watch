@@ -1,0 +1,11 @@
+.SortOptions :global(select) {
+    max-width: 200px;
+    width: 100%;
+    padding: 0.3rem;
+    margin: 1rem 0;
+    color: #2b2b2b;
+    font-size: 0.9rem;
+    border: none;
+    outline: none;
+    text-align: center;
+}

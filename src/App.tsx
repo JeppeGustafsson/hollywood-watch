@@ -3,6 +3,7 @@ import './App.css';
 import Item from './movieGrid/item';
 import SearchBar from './search/SearchBar';
 import AddMovie from './addMovie/addMovie';
+import SortOptions from './sort/SortOptions';
 import { Movie } from './models/interface';
 import _ from 'lodash';
 import lotrImageOne from './assets/lotr-1.jpeg';
@@ -12,11 +13,11 @@ import snatchImage from './assets/snatch.jpg';
 import Logo from './assets/logo.png';
 
 function App() {
-  const [addOn, setAddOn] = useState(false);
+  const [addOn, setAddOn] = useState<boolean>(false);
   const date = new Date();
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
-  const seconds = date.getSeconds();
+  const hours: number = date.getHours();
+  const minutes: number = date.getMinutes();
+  const seconds: number = date.getSeconds();
   const movieData: Movie[] = [
     {
       title: 'Lord of the Rings: The Fellowship of the Ring',
@@ -51,22 +52,23 @@ function App() {
       id: 4
     }
   ]
-  const sortOptions = {
-    default: 'default / newest',
-    AZ: 'A - Z',
-    ZA: 'Z - A'
-  }
 
-  const [search, setSearch] = useState('');
-  const [searchData, setSearchData] = useState(movieData);
-  const [sortType, setSortType] = useState(sortOptions.default);
-  const [sortedData, setSortedData] = useState(movieData);
-  const [data, setData] = useState(movieData);
+  const [search, setSearch] = useState<string>('');
+  const [sortType, setSortType] = useState<string>('default / newest');
+  const [searchData, setSearchData] = useState<Movie[]>(movieData);
+  const [sortedData, setSortedData] = useState<Movie[]>(movieData);
+  const [data, setData] = useState<Movie[]>(movieData);
 
-  const secureData: Movie[] = data.filter(i => i !== undefined);
+  const secureData: Movie[] = data.filter(i => i !== undefined && i !== null);
 
   useEffect(() => {
-    const newSearchData = secureData.filter(i => i.title.toLocaleLowerCase().includes(search) ||
+    setTimeout(() => {
+      localStorage.setItem('data', JSON.stringify(secureData));
+    },200)
+  },[data])
+
+  useEffect(() => {
+    const newSearchData: Movie[] = secureData.filter(i => i.title.toLocaleLowerCase().includes(search) ||
     i.title.toLocaleUpperCase().includes(search));
     setSearchData(newSearchData);
   }, [search])
@@ -82,7 +84,16 @@ function App() {
       const asendingReverseSorted: Movie[] = _.sortBy(secureData, 'title').reverse();
       setSortedData(asendingReverseSorted);
     }
-  },[data, sortType])
+  },[data, sortType]);
+
+  useEffect(() => {
+    if (localStorage.length === 0) {
+      return;
+    } else {
+      const getData = JSON.parse(localStorage.getItem('data') || 'Data is null');
+      setData(getData);
+    }
+  },[])
 
   return (
     <div className="App">
@@ -91,6 +102,7 @@ function App() {
         <button onClick={addOn ? () => setAddOn(false) : () => setAddOn(true)} className="button-add bold">Add</button>
         <img className="logo" src={Logo} />
         <SearchBar inputChange={(e: string) => setSearch(e)} />
+        <SortOptions updateSort={(e: string) => setSortType(e)} />
       </header>
       <main>
         <section className="item-wrapper">
