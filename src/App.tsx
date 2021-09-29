@@ -5,7 +5,7 @@ import SearchBar from './search/SearchBar';
 import AddMovie from './addMovie/addMovie';
 import SortOptions from './sort/SortOptions';
 import { Movie } from './models/interface';
-import _ from 'lodash';
+import _, { update } from 'lodash';
 import lotrImageOne from './assets/lotr-1.jpeg';
 import lotrImageTwo from './assets/lotr-2.jpg';
 import lotrImageThree from './assets/lotr-3.jpg';
@@ -61,17 +61,24 @@ function App() {
 
   const secureData: Movie[] = data.filter(i => i !== undefined && i !== null);
 
+  const updateData = (e: Movie) => {
+    const item: Movie = data.find(i => i.id === e.id) || e;
+    const oldArr: Movie[] = data.filter(i => i.id !== e.id);
+    const updated = {...item, description: e.description};
+    setData([...oldArr, updated]);
+  }
+
   useEffect(() => {
     setTimeout(() => {
       localStorage.setItem('data', JSON.stringify(secureData));
     },200)
-  },[data])
+  },[secureData]);
 
   useEffect(() => {
     const newSearchData: Movie[] = secureData.filter(i => i.title.toLocaleLowerCase().includes(search) ||
     i.title.toLocaleUpperCase().includes(search));
     setSearchData(newSearchData);
-  }, [search])
+  }, [search]);
 
   useEffect(() => {
     if (sortType === 'default / newest') {
@@ -95,6 +102,8 @@ function App() {
     }
   },[])
 
+  console.log(sortedData);
+
   return (
     <div className="App">
       { addOn ? <div className="overlay"><AddMovie movieData={secureData} add={(e: Movie) => setData([...data, e])} close={(e: boolean) => setAddOn(e)} /> </div> : null }
@@ -110,20 +119,26 @@ function App() {
             search.length < 1 ? 
             sortedData.map(i => {
               return <Item
+                      update={(e: Movie) => updateData(e)}
                       key={i.id}
                       title={i.title}
                       description={i.description}
                       image={i.image}
                       genre={i.genre}
+                      id={i.id}
+                      date={i.date}
                     />
             }) :
             searchData.map(i => {
               return <Item
+                      update={(e: Movie) => updateData(e)}
                       key={i.id}
                       title={i.title}
                       description={i.description}
                       image={i.image}
                       genre={i.genre}
+                      id={i.id}
+                      date={i.date}
                     />
             })
           }
