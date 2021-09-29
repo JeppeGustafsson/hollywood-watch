@@ -64,7 +64,7 @@ function App() {
   const updateData = (e: Movie) => {
     const item: Movie = data.find(i => i.id === e.id) || e;
     const oldArr: Movie[] = data.filter(i => i.id !== e.id);
-    const updated = {...item, description: e.description};
+    const updated = {...item, description: e.description, title: e.title};
     setData([...oldArr, updated]);
   }
 

@@ -6,13 +6,14 @@ const Item = (props: any) => {
     const desc = useRef<HTMLParagraphElement>(null);
     const [height, setHeight] = useState<number | undefined>(0);
     const [edit, setEdit] = useState(false);
-    const [value, setValue] = useState(props?.description);
+    const [descValue, setDescValue] = useState(props?.description);
+    const [titleValue, setTitleValue] = useState(props?.title);
 
     const handleChange = () => {
         const item: Movie = {
-            title: props?.title,
+            title: titleValue,
             image: props?.image,
-            description: value,
+            description: descValue,
             genre: props?.genre,
             date: props?.date,
             id: props?.id
@@ -29,9 +30,9 @@ const Item = (props: any) => {
     return (
         <article className={Style.Item}>
             <img src={props?.image} alt={props?.title + '-image'} />
-            <h2>{props?.title}</h2>
-            { edit ? <textarea value={value} style={{height: height}} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>): void => setValue(e?.target?.value)}></textarea> :
-            <p onClick={() => setEdit(true)} ref={desc}>{value}</p> }
+            { edit ? <textarea className="for-h2" value={titleValue} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>): void => setTitleValue(e?.target?.value)}></textarea> : <h2 onClick={() => setEdit(true)}>{titleValue}</h2> }
+            { edit ? <textarea value={descValue} style={{height: height}} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>): void => setDescValue(e?.target?.value)}></textarea> :
+            <p onClick={() => setEdit(true)} ref={desc}>{descValue}</p> }
             <p className="bold">{props?.genre}</p>
             { edit ? <button className="button" onClick={() => handleChange()}>Done</button> : null }
         </article>

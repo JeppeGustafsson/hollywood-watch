@@ -41,6 +41,11 @@
     resize: none;
 }
 
+.Item :global(.for-h2) {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
 .Item :global(button) {
     width: 200px;
     padding: 0.6rem;
